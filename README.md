@@ -50,6 +50,15 @@ python -m notion4ever -p NOTION_PAGE_ID -bl True
 ```
 
 The site is generated in `./_site`; open the root page's `.html` file in your browser.
+
+### Exporting several pages at once
+Pass several page IDs (or full Notion page URLs) to `-p`, separated by spaces or commas:
+```bash
+poetry run python -m notion4ever -bl True -p 12e3d1659a444678b4e2b6a989a3c625 00ef4311866942fd8efd351cc976959c
+```
+Each page is exported as its own site in `./_site/<Page_title>/` (a `_2` suffix is added if two pages have the same title). If one page fails, the others are still exported and the failed IDs are listed at the end. `-rb True` then only removes each page's own folder. With a single ID, the behaviour is unchanged.
+
+Downloaded content is cached per page in `notion_content_<page_id>.json` (and `notion_content.json` for a single page). Delete the cache file to re-download a page from Notion.
 The token can also be passed with `-n`, and the page ID can be set with the `NOTION_PAGE_ID` environment variable.
 
 > ⚠️ **Keep your data private.** Never commit your token. `notion_content.json` and `notion_structured.json` contain your whole exported workspace in plain text and are ignored by git, as is `_site/`. Don't use `-rb True` (remove before build) with an `-od` output directory that contains anything else: it is deleted entirely.
