@@ -23,12 +23,37 @@ Notion4ever is a small python tool that allows you to free your content and expo
 * Lightweight and responsive.
 * Downloads all your images and files locally (you can turn this off if you prefer to store images\files somewhere else).
 
-# 💻 How to run it locally
-Just copy or clone the content of this repository and run.
+> **About this fork.** This is a fork of [MerkulovDaniil/notion4ever](https://github.com/MerkulovDaniil/notion4ever) that adds:
+> * fixes for crashes on native Notion icons, untitled pages and `/` in page titles (proposed upstream in [#12](https://github.com/MerkulovDaniil/notion4ever/pull/12));
+> * a [Poetry](https://python-poetry.org/) setup (`pyproject.toml`, `poetry.lock`) as an alternative to `requirements.txt`.
 
-```python
-python -m notion4ever -n NOTION_TOKEN -p NOTION_PAGE_ID -bl True
-``` 
+# 💻 How to run it locally
+Clone this repository, then install the dependencies with Poetry (recommended) or pip.
+
+### Prerequisites
+1. Create an integration at [notion.so/my-integrations](https://www.notion.so/my-integrations) and copy its token (it starts with `ntn_` or `secret_`).
+1. Share the page you want to export with the integration: in Notion, open the page → `⋯` → `Connections` → add your integration. Child pages inherit access.
+1. Get the page ID: the 32 hex characters at the end of the page URL, e.g. `https://www.notion.so/My-Page-12e3d1659a444678b4e2b6a989a3c625` → `12e3d1659a444678b4e2b6a989a3c625`.
+
+### With Poetry
+```bash
+poetry install                       # creates .venv/ in the project (see poetry.toml)
+export NOTION_TOKEN=ntn_xxx          # keeps the token out of your commands and shell history
+poetry run python -m notion4ever -p NOTION_PAGE_ID -bl True
+```
+
+### With pip
+```bash
+pip install -r requirements.txt
+export NOTION_TOKEN=ntn_xxx
+python -m notion4ever -p NOTION_PAGE_ID -bl True
+```
+
+The site is generated in `./_site`; open the root page's `.html` file in your browser.
+The token can also be passed with `-n`, and the page ID can be set with the `NOTION_PAGE_ID` environment variable.
+
+> ⚠️ **Keep your data private.** Never commit your token. `notion_content.json` and `notion_structured.json` contain your whole exported workspace in plain text and are ignored by git, as is `_site/`. Don't use `-rb True` (remove before build) with an `-od` output directory that contains anything else: it is deleted entirely.
+
 # 🤖 How to run it automatically with Github actions
 I will demonstrate it on the specific example of my site.
 [Notion page](https://fmin.notion.site/Danya-Merkulov-12e3d1659a444678b4e2b6a989a3c625) -> [Github repository](https://github.com/MerkulovDaniil/merkulovdaniil.github.io/)
